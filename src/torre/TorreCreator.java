@@ -5,6 +5,13 @@ import java.util.Map;
 
 import prof.jogos2D.util.ImageLoader;
 import torre.fabricaTorres.FabricaTorre;
+import torre.fabricaTorres.FactoryBalista;
+import torre.fabricaTorres.FactoryCanhao;
+import torre.fabricaTorres.FactoryMacaco;
+import torre.fabricaTorres.FactoryMorteiro;
+import torre.fabricaTorres.FactoryNinja;
+import torre.fabricaTorres.FactoryOcto;
+import torre.fabricaTorres.FactorySniper;
 
 /**
  * Classe que trata da criação das várias torres. Esta classe existe que lidar
@@ -27,6 +34,16 @@ public class TorreCreator {
         FabricaTorre f = catalogo.get(nome);
         return (f != null) ? f.criaTorre(loader) : null;
     }
+
+    public TorreCreator() {
+    registarTorre("macaco", new FactoryMacaco());
+    registarTorre("octo", new FactoryOcto());
+    registarTorre("canhao", new FactoryCanhao());
+    registarTorre("morteiro", new FactoryMorteiro());
+    registarTorre("balista", new FactoryBalista());
+    registarTorre("ninja", new FactoryNinja());
+    registarTorre("sniper", new FactorySniper()); 
+}
 
 
 }
