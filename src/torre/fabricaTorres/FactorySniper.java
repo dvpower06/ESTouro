@@ -4,14 +4,14 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import prof.jogos2D.util.ImageLoader;
 import torre.Torre;
-import torre.TorreBalista;
+import torre.TorreSniper;
 
 public class FactorySniper implements FabricaTorre {
 
     @Override
     public Torre criaTorre(ImageLoader loader) {
         Image img = loader.getImage("data/torres/sniper/imagem.gif");
-        return new TorreBalista((BufferedImage) img);
+        return new TorreSniper((BufferedImage) img);
     }
     
 }
