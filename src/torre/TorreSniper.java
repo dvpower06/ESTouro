@@ -12,8 +12,8 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import bloon.Bloon;
+import game.manipulator.ManipuladorOcto;
 import game.manipulator.ManipuladorTorre;
-import game.manipulator.ManipuladorVazio;
 import prof.jogos2D.image.*;
 import prof.jogos2D.util.ImageLoader;
 import torre.projetil.Dardo;
@@ -28,7 +28,7 @@ public class TorreSniper extends TorreDefault {
     
     public TorreSniper(BufferedImage img) {
         super(new ComponenteMultiAnimado(new Point(), img, 2, 4, 2),
-                20, 0, new Point(20, -3), 100);
+                20, 0, new Point(20, -3), Integer.MAX_VALUE);
         setAnguloDisparo(0);
     }
 
@@ -43,7 +43,7 @@ public class TorreSniper extends TorreDefault {
         double cos = Math.cos(angulo);
         double sin = Math.sin(angulo);
         Point centro = getComponente().getPosicaoCentro();
-        mira = new Point((int) (centro.x + getRaioAcao() * cos), (int) (centro.y + getRaioAcao() * sin));
+        mira = new Point((int) (centro.x + 2000 * cos), (int) (centro.y + 2000 * sin)); //2000 -> valor elevado
     }
 
 
@@ -63,9 +63,9 @@ public class TorreSniper extends TorreDefault {
         Point mira = getMira();
         Composite oldComp = g.getComposite();
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-        g.setColor(Color.BLUE);
+        g.setColor(Color.RED);
         Line2D.Float l = new Line2D.Float(centro, mira);
-        g.setStroke(new BasicStroke(20));
+        g.setStroke(new BasicStroke(1));
         g.draw(l);
         g.setColor(Color.WHITE);
         g.setStroke(new BasicStroke(18));
@@ -94,30 +94,17 @@ public class TorreSniper extends TorreDefault {
         double angle = anim.getAngulo();
 
     
-        sincronizarFrameDisparo(anim);
-
-     
-        if (!podeDisparar())
-            return new Projetil[0];
-
-   
+        sincronizarFrameDisparo(anim);   
         resetTempoDisparar();
+     
 
-       
-        Point centro = getComponente().getPosicaoCentro();
-        Point disparo = getPontoDisparo();
-        double cosA = Math.cos(angle);
-        double senA = Math.sin(angle);
-        int px = (int) (disparo.x * cosA - disparo.y * senA);
-        int py = (int) (disparo.y * cosA + disparo.x * senA); 
-        Point shoot = new Point(centro.x + px, centro.y + py);
-
-  
         Projetil p[] = new Projetil[1];
-        ComponenteVisual img = new ComponenteSimples(ImageLoader.getLoader().getImage("data/torres/seta.gif"));
+        ComponenteVisual img = new ComponenteSimples(ImageLoader.getLoader().getImage("data/torres/dardo.gif"));
+
         p[0] = new Dardo(img, angle, 10, 5);
-        p[0].setPosicao(shoot);
-        p[0].setAlcance(getRaioAcao() + 50);
+        p[0].setPosicao(posAlvo);
+        p[0].setAlcance(100); 
+
         return p;
     }
 
@@ -136,7 +123,7 @@ public class TorreSniper extends TorreDefault {
 
     @Override
     public ManipuladorTorre getManipulador() {
-        return new ManipuladorVazio(this);
+        return new ManipuladorOcto(this);
     }
 
 }
