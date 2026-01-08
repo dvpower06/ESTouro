@@ -96,13 +96,6 @@ public class TorreBalista extends TorreDefault {
 	public Projetil[] atacar(List<Bloon> bloons) {
 		atualizarCicloDisparo();
 
-		// vamos buscar o desenho pois vai ser preciso várias vezes
-		ComponenteMultiAnimado anim = getComponente();
-
-		// já acabou a animação de disparar? volta à animação de pausa
-		if (anim.getAnim() == ATAQUE_ANIM && anim.numCiclosFeitos() >= 1) {
-			anim.setAnim(PAUSA_ANIM);
-		}
 
 		// determinar a posição do bloon alvo, consoante o método de ataque
 		List<Bloon> alvosPossiveis = getBloonsInLine(bloons, getComponente().getPosicaoCentro(), getMira());
@@ -112,11 +105,7 @@ public class TorreBalista extends TorreDefault {
 			return new Projetil[0];
 
 		// ver o ângulo que o alvo faz com a torre, para assim rodar esta
-		double angle = anim.getAngulo();
-
-		// se vai disparar daqui a pouco, começamos já com a animação de ataque
-		// para sincronizar a frame de disparo com o disparo real
-		sincronizarFrameDisparo(anim);
+		double angle = prepararDisparo(posAlvo);
 
 		// se ainda não está na altura de disparar, não dispara
 		if (!podeDisparar())
@@ -125,14 +114,7 @@ public class TorreBalista extends TorreDefault {
 		// disparar
 		resetTempoDisparar();
 
-		// primeiro calcular o ponto de disparo
-		Point centro = getComponente().getPosicaoCentro();
-		Point disparo = getPontoDisparo();
-		double cosA = Math.cos(angle);
-		double senA = Math.sin(angle);
-		int px = (int) (disparo.x * cosA - disparo.y * senA);
-		int py = (int) (disparo.y * cosA + disparo.x * senA); // repor o tempo de disparo
-		Point shoot = new Point(centro.x + px, centro.y + py);
+		Point shoot = calcularPontoDisparo(angle);
 
 		// depois criar os projéteis
 		Projetil p[] = new Projetil[1];

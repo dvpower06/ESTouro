@@ -75,14 +75,7 @@ public class TorreSniper extends TorreDefault {
 
     @Override
     public Projetil[] atacar(List<Bloon> bloons) {
-        atualizarCicloDisparo();
-
-        
-        ComponenteMultiAnimado anim = getComponente();
-
-        if (anim.getAnim() == ATAQUE_ANIM && anim.numCiclosFeitos() >= 1) {
-            anim.setAnim(PAUSA_ANIM);
-        }
+               
 
         List<Bloon> alvosPossiveis = getBloonsInLine(bloons, getComponente().getPosicaoCentro(), getMira());
         Point posAlvo = (alvosPossiveis.size() == 0) ? null : mira;
@@ -91,18 +84,16 @@ public class TorreSniper extends TorreDefault {
             return new Projetil[0];
 
    
-        double angle = anim.getAngulo();
+        double angle = prepararDisparo(posAlvo);
 
-    
-        sincronizarFrameDisparo(anim);   
-        resetTempoDisparar();
+        Point shoot = calcularPontoDisparo(angle);
      
 
         Projetil p[] = new Projetil[1];
         ComponenteVisual img = new ComponenteSimples(ImageLoader.getLoader().getImage("data/torres/dardo.gif"));
 
         p[0] = new Dardo(img, angle, 10, 5);
-        p[0].setPosicao(posAlvo);
+        p[0].setPosicao(shoot);
         p[0].setAlcance(100); 
 
         return p;

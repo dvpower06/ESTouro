@@ -21,8 +21,6 @@ import torre.ataques.AtacaPrimeiro;
 import torre.ataques.AtacaUltimo;
 import torre.ataques.ModoAtaque;
 
-
-
 /**
  * Classe que implementa os comportamentos e variáveis comuns a todos as torres.
  * Tambám possui alguns métodos auxiliares para as várias torres
@@ -45,13 +43,13 @@ public abstract class TorreDefault implements Torre {
 	private ModoAtaque ataque;
 
 	private static final Map<Integer, ModoAtaque> ESTRATEGIAS = Map.of(
-    Torre.ATACA_PRIMEIRO, new AtacaPrimeiro(),
-    Torre.ATACA_ULTIMO,   new AtacaUltimo(),
-    Torre.ATACA_PERTO,    new AtacaPerto(),
-    Torre.ATACA_JUNTOS,   new AtacaJuntos(),
-	Torre.ATACA_FORTE, new AtacaForte(),
-	Torre.ATACA_LONGE, new AtacaLonge()
-	
+			Torre.ATACA_PRIMEIRO, new AtacaPrimeiro(),
+			Torre.ATACA_ULTIMO, new AtacaUltimo(),
+			Torre.ATACA_PERTO, new AtacaPerto(),
+			Torre.ATACA_JUNTOS, new AtacaJuntos(),
+			Torre.ATACA_FORTE, new AtacaForte(),
+			Torre.ATACA_LONGE, new AtacaLonge()
+
 	);
 
 	/**
@@ -75,6 +73,8 @@ public abstract class TorreDefault implements Torre {
 		this.frameDisparoDelay = delayDisparo;
 		this.pontoDisparo = Objects.requireNonNull(pontoDisparo);
 		this.raioAtaque = raioAtaque;
+
+		this.setModoAtaque(this.modoAtaque);
 	}
 
 	protected void atualizarCicloDisparo() {
@@ -164,7 +164,8 @@ public abstract class TorreDefault implements Torre {
 	public int getModoAtaque() {
 		return modoAtaque;
 	}
-	//Estrategia do ataque
+
+	// Estrategia do ataque
 	public ModoAtaque getAtaque() {
 		return ataque;
 	}
@@ -207,8 +208,35 @@ public abstract class TorreDefault implements Torre {
 		}
 	}
 
-	
+	protected Double prepararDisparo(Point posAlvo) {
+		// vamos buscar o desenho pois vai ser preciso várias vezes
+		ComponenteMultiAnimado anim = getComponente();
+
+		// já acabou a animação de disparar? volta à animação de pausa
+		if (anim.getAnim() == ATAQUE_ANIM && anim.numCiclosFeitos() == 1) {
+			anim.setAnim(PAUSA_ANIM);
+		}
+
+		// ver o ângulo que o alvo faz com a torre, para assim rodar esta
+		double angle = DetectorColisoes.getAngulo(posAlvo, anim.getPosicaoCentro());
+		anim.setAngulo(angle);
+
+		// se vai disparar daqui a pouco, começamos já com a animação de ataque
+		// para sincronizar a frame de disparo com o disparo real
+		sincronizarFrameDisparo(anim);
+		return angle;
+	}
+
+	protected Point calcularPontoDisparo(double angle) {
+		Point centro = getComponente().getPosicaoCentro();
+		// primeiro calcular o ponto de disparo
+		Point disparo = getPontoDisparo();
+		double cosA = Math.cos(angle);
+		double senA = Math.sin(angle);
+		int px = (int) (disparo.x * cosA - disparo.y * senA);
+		int py = (int) (disparo.y * cosA + disparo.x * senA); // repor o tempo de disparo
+
+		return new Point(centro.x + px, centro.y + py);
+	}
 
 }
-
-

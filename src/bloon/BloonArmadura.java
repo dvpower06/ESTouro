@@ -7,9 +7,9 @@ import prof.jogos2D.image.ComponenteVisual;
 
 public class BloonArmadura extends BloonSimples {
 
-    private Bloon bloon;
+    private final Bloon bloon;
     private int armadura;
-    private ComponenteVisual imgArmadura;
+    private final ComponenteVisual imgArmadura;
 
     public BloonArmadura(Bloon interno, ComponenteVisual imgArmadura, int numContactos) {
     

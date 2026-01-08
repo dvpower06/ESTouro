@@ -5,12 +5,10 @@ import java.awt.image.BufferedImage;
 import java.io.PrintWriter;
 import java.util.List;
 
-
 import bloon.Bloon;
 import game.manipulator.ManipuladorTorre;
 import game.manipulator.ManipuladorVazio;
 import prof.jogos2D.image.*;
-import prof.jogos2D.util.DetectorColisoes;
 import prof.jogos2D.util.ImageLoader;
 import torre.projetil.BombaImpacto;
 import torre.projetil.Projetil;
@@ -34,11 +32,6 @@ public class TorreCanhao extends TorreDefault {
 		// vamos buscar o desenho pois vai ser preciso várias vezes
 		ComponenteMultiAnimado anim = getComponente();
 
-		// já acabou a animação de disparar? volta à animação de pausa
-		if (anim.getAnim() == ATAQUE_ANIM && anim.numCiclosFeitos() >= 1) {
-			anim.setAnim(PAUSA_ANIM);
-		}
-
 		// ver quais os bloons que estão ao alcance
 		List<Bloon> alvosPossiveis = getBloonsInRadius(bloons, getComponente().getPosicaoCentro(), getRaioAcao());
 		if (alvosPossiveis.size() == 0)
@@ -46,20 +39,15 @@ public class TorreCanhao extends TorreDefault {
 		// TODO FEITO remover este switch e suportar os restantes modos de ataque
 		// ver a posição do centro para o teste de estar perto
 		Point centro = getComponente().getPosicaoCentro();
-		
-		// determinar a posição do bloon alvo, consoante o método de ataque
-		Point posAlvo = getAtaque().escolherPosicao(bloons, centro);
 
+		// determinar a posição do bloon alvo, consoante o método de ataque
+		Point posAlvo = getAtaque().escolherPosicao(alvosPossiveis, centro);
 
 		if (posAlvo == null)
 			return new Projetil[0];
 
-		// ver o ângulo que o alvo faz com a torre, para assim rodar esta
-		double angle1 = DetectorColisoes.getAngulo(posAlvo, anim.getPosicaoCentro());
-		anim.setAngulo(angle1);
-
 		// ajustar o ângulo
-		double angle = angle1;
+		double angle = prepararDisparo(posAlvo);
 
 		// se vai disparar daqui a pouco, começamos já com a animação de ataque
 		// para sincronizar a frame de disparo com o disparo real
@@ -72,13 +60,7 @@ public class TorreCanhao extends TorreDefault {
 		// disparar
 		resetTempoDisparar();
 
-		// primeiro calcular o ponto de disparo
-		Point disparo = getPontoDisparo();
-		double cosA = Math.cos(angle);
-		double senA = Math.sin(angle);
-		int px = (int) (disparo.x * cosA - disparo.y * senA);
-		int py = (int) (disparo.y * cosA + disparo.x * senA); // repor o tempo de disparo
-		Point shoot = new Point(centro.x + px, centro.y + py);
+		Point shoot = calcularPontoDisparo(angle);
 
 		// depois criar os projéteis
 		Projetil p[] = new Projetil[1];

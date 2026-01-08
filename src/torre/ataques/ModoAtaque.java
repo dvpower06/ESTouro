@@ -8,10 +8,5 @@ import bloon.Bloon;
 
 public interface ModoAtaque {
 
-    
-
     Point escolherPosicao(List<Bloon> bloons, Point centro);
-   
-
-
-}
+   }
