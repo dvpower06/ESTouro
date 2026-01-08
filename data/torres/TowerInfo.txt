@@ -1,4 +1,4 @@
-6
+7
 <torre>
 macaco
 Macaco Lançador
@@ -40,8 +40,8 @@ Ninja
 Alterna entre atirar 3 shurikans ou 1 granada.
 </torre>
 <torre>
-Sniper
 sniper
+Sniper
 400
 Atira a qualquer distancia.
 </torre>
