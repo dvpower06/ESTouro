@@ -17,9 +17,12 @@ public class ManipuladorCreator {
 	 */
 	public static ManipuladorTorre criarManipulador(Torre t) {
 		// TODO FEITO remover estes instanceof
-		if (t== null)
+		if (t == null)
 			return null;
 		return t.getManipulador();
 	}
 
 }
+
+
+

@@ -12,7 +12,7 @@ public class BloonArmadura extends BloonSimples {
     private final ComponenteVisual imgArmadura;
 
     public BloonArmadura(Bloon interno, ComponenteVisual imgArmadura, int numContactos) {
-    
+
         super(interno.getComponente(), interno.getPopComponente(),
                 interno.getVelocidade(), interno.getResistencia(), interno.getValor());
         this.bloon = interno;
@@ -25,10 +25,10 @@ public class BloonArmadura extends BloonSimples {
         if (armadura > 0) {
             armadura--;
             if (armadura == 0) {
-               
+
                 return damage;
             }
-            return 0; 
+            return 0;
         }
         return bloon.pop(damage);
     }
@@ -41,7 +41,7 @@ public class BloonArmadura extends BloonSimples {
 
     @Override
     public ComponenteVisual getComponente() {
-        
+
         return armadura > 0 ? imgArmadura : bloon.getComponente();
     }
 
@@ -54,7 +54,6 @@ public class BloonArmadura extends BloonSimples {
             imgArmadura.setPosicaoCentro(p);
         }
     }
-
 
     @Override
     public Rectangle getBounds() {
@@ -71,6 +70,12 @@ public class BloonArmadura extends BloonSimples {
         bloon.addBloonObserver(bo);
     }
 
-    
-
+    @Override
+    public Bloon clone() {
+        BloonArmadura novo = new BloonArmadura(
+                bloon.clone(),
+                imgArmadura,
+                armadura);
+        return novo;
+    }
 }

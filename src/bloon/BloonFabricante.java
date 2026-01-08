@@ -42,6 +42,23 @@ public class BloonFabricante extends BloonSimples {
     }
 
     @Override
+    public Bloon clone() {
+        BloonFabricante novo = new BloonFabricante(
+                getComponente(),
+                getPopComponente(),
+                getVelocidade(),
+                getResistencia(),
+                getValor(),
+                ritmoCriacao);
+    
+        for (Bloon b : provaveis) {
+            novo.addBloonProvavel(b.clone());
+        }
+        novo.proximaCriacao = this.proximaCriacao;
+        return novo;
+    }
+
+    @Override
     public void mover() {
         super.mover();
         // se por acaso já saiu não faz nada
@@ -56,7 +73,8 @@ public class BloonFabricante extends BloonSimples {
             int pos = getPosicaoNoCaminho();
             if (getCaminho().getPoint(pos + pathOffset) == null)
                 pathOffset = 0;
-            // TODO FEITO esta parte tem de ser revista pois está a usar repetidamente os mesmos
+            // TODO FEITO esta parte tem de ser revista pois está a usar repetidamente os
+            // mesmos
             // bloons
             Bloon escolhido = provaveis.get(idx).clone();
             escolhido.setCaminho(getCaminho());
@@ -67,4 +85,3 @@ public class BloonFabricante extends BloonSimples {
         }
     }
 }
-

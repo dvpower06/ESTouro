@@ -99,4 +99,19 @@ public class BloonMultiCamada extends BloonSimples {
 			getObservers().forEach(o -> b.addBloonObserver(o));
 		}
 	}
+
+	@Override
+	public Bloon clone() {
+		BloonMultiCamada novo = new BloonMultiCamada(
+				getComponente(),
+				getPopComponente(),
+				getVelocidade(),
+				getResistencia(),
+				getValor());
+		
+		for (Bloon b : bloons) {
+			novo.addBloon(b.clone());
+		}
+		return novo;
+	}
 }
